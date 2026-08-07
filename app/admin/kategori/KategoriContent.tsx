@@ -74,7 +74,6 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold font-headline text-slate-900">Kategori Buku</h1>
-          <p className="text-sm text-neutral mt-1">Kelola kategori untuk mengklasifikasikan koleksi buku perpustakaan.</p>
         </div>
       </div>
 
@@ -93,10 +92,10 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
         
         {/* Left Side: Add Form */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 h-fit shadow-sm">
-          <h2 className="text-lg font-bold font-headline text-slate-900 mb-4">Tambah Kategori Baru</h2>
+          <h2 className="text-lg font-bold font-headline text-slate-900 mb-8">Tambah Kategori Baru</h2>
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block mb-1.5">
+              <label className="text-sm font-bold font-headline uppercase tracking-wider text-slate-700 block mb-1.5">
                 Nama Kategori
               </label>
               <input
@@ -105,18 +104,18 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
                 value={newNama}
                 onChange={(e) => setNewNama(e.target.value)}
                 disabled={isPending}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-900 text-sm"
+                className="w-full px-4 py-3 bg-slate-200 border border-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-700 text-base"
               />
             </div>
             <button
               onClick={handleAdd}
               disabled={isPending || !newNama.trim()}
-              className="w-full py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl transition-all shadow-md hover:shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 text-sm cursor-pointer"
+              className="w-full py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl transition-all shadow-md hover:shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 text-base cursor-pointer"
             >
               {isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-6 h-4 animate-spin" />
               ) : (
-                <Plus className="w-4 h-4" />
+                <Plus className="w-6 h-4" />
               )}
               <span>Tambah Kategori</span>
             </button>
@@ -133,23 +132,23 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
                 placeholder="Cari kategori..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-900 text-sm max-w-xs"
+                className="px-4 py-2.5 bg-slate-100 border border-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-900 text-base max-w-md"
               />
-              <span className="text-xs font-semibold text-neutral">
+              <span className="text-sm font-semibold text-neutral">
                 Menampilkan {filteredList.length} kategori
               </span>
             </div>
 
             {/* List */}
             {filteredList.length === 0 ? (
-              <div className="p-10 text-center text-neutral text-sm">
+              <div className="p-10 text-center text-neutral text-base">
                 Tidak ada kategori ditemukan.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-slate-50 border-b border-slate-100 text-xs font-bold font-headline uppercase tracking-wider text-slate-500">
+                    <tr className="bg-slate-50 border-b border-slate-100 text-sm font-bold font-headline uppercase tracking-wider text-slate-500">
                       <th className="p-4 pl-6">Nama Kategori</th>
                       <th className="p-4 pr-6 text-right w-32">Aksi</th>
                     </tr>
@@ -163,10 +162,10 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
                               type="text"
                               value={editingNama}
                               onChange={(e) => setEditingNama(e.target.value)}
-                              className="w-full px-3 py-1.5 bg-white border border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg outline-none text-slate-900 text-sm"
+                              className="w-full px-3 py-1.5 bg-white border border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg outline-none text-slate-900 text-base"
                             />
                           ) : (
-                            <span className="font-medium text-slate-900">{item.nama}</span>
+                            <span className="font-medium text-slate-900 text-base">{item.nama}</span>
                           )}
                         </td>
                         <td className="p-4 pr-6 text-right">
@@ -179,14 +178,14 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
                                   className="p-2 bg-emerald-50 text-secondary hover:bg-emerald-100 rounded-lg transition-colors cursor-pointer"
                                   title="Simpan"
                                 >
-                                  <Check className="w-4 h-4" />
+                                  <Check className="w-6 h-4" />
                                 </button>
                                 <button
                                   onClick={() => setEditingId(null)}
                                   className="p-2 bg-slate-100 text-neutral hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
                                   title="Batal"
                                 >
-                                  <X className="w-4 h-4" />
+                                  <X className="w-6 h-4" />
                                 </button>
                               </>
                             ) : (
@@ -199,14 +198,14 @@ export default function KategoriContent({ initialData }: { initialData: Kategori
                                   className="p-2 bg-blue-50 text-primary hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
                                   title="Edit"
                                 >
-                                  <Pencil className="w-4 h-4" />
+                                  <Pencil className="w-6 h-4" />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(item.id)}
                                   className="p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
                                   title="Hapus"
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  <Trash2 className="w-6 h-4" />
                                 </button>
                               </>
                             )}

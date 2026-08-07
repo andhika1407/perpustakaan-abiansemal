@@ -9,6 +9,7 @@ export type BukuData = {
   tahun: number | null
   kategori_id: string | null
   jumlah_eksemplar: number
+  keterangan: string | null
 }
 
 export async function getBuku() {
@@ -46,6 +47,7 @@ export async function createBuku(data: BukuData) {
     kategori_id: data.kategori_id || null,
     jumlah_eksemplar: data.jumlah_eksemplar,
     jumlah_tersedia: data.jumlah_eksemplar, // Initially all copies are available
+    keterangan: data.keterangan
   })
 
   if (error) {
@@ -98,6 +100,7 @@ export async function updateBuku(id: string, data: BukuData) {
       kategori_id: data.kategori_id || null,
       jumlah_eksemplar: data.jumlah_eksemplar,
       jumlah_tersedia: newJumlahTersedia,
+      keterangan: data.keterangan,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)

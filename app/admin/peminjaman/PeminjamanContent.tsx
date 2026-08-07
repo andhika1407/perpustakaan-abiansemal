@@ -136,11 +136,10 @@ export default function PeminjamanContent({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold font-headline text-slate-900">Modul Peminjaman Buku</h1>
-          <p className="text-sm text-neutral mt-1">Kelola dan pantau transaksi peminjaman serta pengembalian buku siswa.</p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="px-5 py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-sm self-start sm:self-auto cursor-pointer"
+          className="px-5 py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-base self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-5 h-5" />
           <span>Pinjamkan Buku</span>
@@ -164,7 +163,7 @@ export default function PeminjamanContent({
             <BookMarked className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral font-medium">Total Peminjaman</p>
+            <p className="text-base text-neutral font-medium">Total Peminjaman</p>
             <p className="text-2xl font-black text-slate-900 mt-0.5">{totalPinjam}</p>
           </div>
         </div>
@@ -174,7 +173,7 @@ export default function PeminjamanContent({
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral font-medium">Sedang Dipinjam</p>
+            <p className="text-base text-neutral font-medium">Sedang Dipinjam</p>
             <p className="text-2xl font-black text-slate-900 mt-0.5">{sedangDipinjam}</p>
           </div>
         </div>
@@ -184,7 +183,7 @@ export default function PeminjamanContent({
             <AlertCircle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral font-medium">Terlambat</p>
+            <p className="text-base text-neutral font-medium">Terlambat</p>
             <p className="text-2xl font-black text-slate-900 mt-0.5">{terlambat}</p>
           </div>
         </div>
@@ -194,7 +193,7 @@ export default function PeminjamanContent({
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral font-medium">Sudah Kembali</p>
+            <p className="text-base text-neutral font-medium">Sudah Kembali</p>
             <p className="text-2xl font-black text-slate-900 mt-0.5">{selesai}</p>
           </div>
         </div>
@@ -210,7 +209,7 @@ export default function PeminjamanContent({
             placeholder="Cari siswa, kelas, atau judul buku..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-200 border border-slate-400 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
           />
         </div>
 
@@ -225,7 +224,7 @@ export default function PeminjamanContent({
             <button
               key={tab.value}
               onClick={() => setStatusFilter(tab.value as any)}
-              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              className={`px-4 py-2 text-sm font-bold rounded-lg transition-all cursor-pointer ${
                 statusFilter === tab.value
                   ? 'bg-white text-primary shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
@@ -240,16 +239,16 @@ export default function PeminjamanContent({
       {/* Table List */}
       <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-800 font-headline font-bold text-xs uppercase tracking-wider">
+          <table className="w-full table-fixed min-w-[800px] border-collapse text-left text-sm text-slate-600">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-800 font-headline font-bold text-sm text-center uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4">Nama Siswa</th>
-                <th className="px-6 py-4">Buku</th>
-                <th className="px-6 py-4">Tanggal Pinjam</th>
-                <th className="px-6 py-4">Tenggat Waktu</th>
-                <th className="px-6 py-4">Tanggal Kembali</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Aksi</th>
+                <th className="px-6 py-4 w-[20%]">Nama Siswa</th>
+                <th className="px-6 py-4 w-[15%]">Buku</th>
+                <th className="px-6 py-4 w-[15%]">Tanggal Pinjam</th>
+                <th className="px-6 py-4 w-[15%]">Tenggat Waktu</th>
+                <th className="px-6 py-4 w-[15%]">Tanggal Kembali</th>
+                <th className="px-6 py-4 w-[10%]">Status</th>
+                <th className="px-6 py-4 w-[10%]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 font-body">
@@ -265,46 +264,43 @@ export default function PeminjamanContent({
                     <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
                       {/* Siswa */}
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-900">{item.nama_siswa}</div>
-                        <div className="text-xs text-neutral mt-0.5">Kelas {item.kelas}</div>
+                        <div className="font-semibold text-slate-900 text-base">{item.nama_siswa}</div>
+                        <div className="text-sm text-neutral mt-0.5">Kelas {item.kelas}</div>
                       </td>
                       {/* Buku */}
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-900 max-w-xs truncate">
+                        <div className="text-base font-medium text-slate-900 max-w-xs truncate">
                           {item.buku?.judul || 'Buku Terhapus'}
-                        </div>
-                        <div className="text-xs text-neutral mt-0.5">
-                          {item.buku?.pengarang || 'Pengarang Tidak Diketahui'}
                         </div>
                       </td>
                       {/* Tanggal Pinjam */}
-                      <td className="px-6 py-4 whitespace-nowrap text-xs">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                         {formatDate(item.tanggal_pinjam)}
                       </td>
                       {/* Tanggal Jatuh Tempo */}
-                      <td className="px-6 py-4 whitespace-nowrap text-xs font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-medium">
                         {formatDate(item.tanggal_jatuh_tempo)}
                       </td>
                       {/* Tanggal Kembali */}
-                      <td className="px-6 py-4 whitespace-nowrap text-xs">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                         {formatDate(item.tanggal_kembali)}
                       </td>
                       {/* Status */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         {item.status === 'dipinjam' && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-primary border border-blue-100">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-bold bg-blue-50 text-primary border border-blue-100">
                             <Clock className="w-3.5 h-3.5" />
                             Dipinjam
                           </span>
                         )}
                         {item.status === 'telat' && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100 animate-pulse">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-bold bg-red-50 text-red-600 border border-red-100 animate-pulse">
                             <AlertCircle className="w-3.5 h-3.5" />
                             Terlambat
                           </span>
                         )}
                         {item.status === 'dikembalikan' && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-50 text-secondary border border-green-100">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-bold bg-green-50 text-secondary border border-green-100">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Kembali
                           </span>
@@ -316,7 +312,7 @@ export default function PeminjamanContent({
                           <button
                             onClick={() => handleReturn(item.id)}
                             disabled={isPending}
-                            className="px-3.5 py-1.5 bg-secondary hover:bg-green-600 disabled:bg-slate-200 text-white text-xs font-bold font-headline rounded-lg shadow-sm transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                            className="px-3.5 py-1.5 bg-secondary hover:bg-green-600 disabled:bg-slate-200 text-white text-sm font-bold font-headline rounded-lg shadow-sm transition-all inline-flex items-center gap-1.5 cursor-pointer"
                           >
                             {isPending ? (
                               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -343,14 +339,14 @@ export default function PeminjamanContent({
             {/* Modal Header */}
             <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-primary" />
-                <h3 className="text-lg font-bold font-headline text-slate-900">Form Peminjaman Buku</h3>
+                <BookOpen className="w-6 h-6 text-primary" />
+                <h3 className="text-xl font-bold font-headline text-slate-900">Form Peminjaman Buku</h3>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-slate-400 hover:text-slate-600 rounded-lg p-1 hover:bg-slate-100 transition-colors"
+                className="text-slate-600 hover:text-slate-800 rounded-lg p-1 hover:bg-slate-100 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
@@ -364,20 +360,20 @@ export default function PeminjamanContent({
               )}
 
               {/* Pilih Buku */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <BookMarked className="w-3.5 h-3.5 text-neutral" />
+              <div className="space-y-2 mb-6">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <BookMarked className="w-4 h-4 text-neutral" />
                   Pilih Buku
                 </label>
                 {availableBooks.length === 0 ? (
-                  <div className="p-3 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-xl">
+                  <div className="p-3 bg-amber-50 border border-amber-200 text-amber-700 text-sm rounded-xl">
                     Tidak ada buku yang saat ini tersedia (stok kosong). Silakan tambah atau update buku di modul Daftar Buku.
                   </div>
                 ) : (
                   <select
                     value={formData.buku_id}
                     onChange={(e) => setFormData({ ...formData, buku_id: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
                     required
                   >
                     <option value="" disabled>-- Pilih Buku Yang Tersedia --</option>
@@ -391,9 +387,9 @@ export default function PeminjamanContent({
               </div>
 
               {/* Nama Siswa */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-neutral" />
+              <div className="space-y-2 mb-6">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <User className="w-4 h-4 text-neutral" />
                   Nama Lengkap Siswa
                 </label>
                 <input
@@ -401,15 +397,15 @@ export default function PeminjamanContent({
                   placeholder="Contoh: I Putu Gede"
                   value={formData.nama_siswa}
                   onChange={(e) => setFormData({ ...formData, nama_siswa: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
                   required
                 />
               </div>
 
               {/* Kelas */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-neutral" />
+              <div className="space-y-2 mb-6">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <User className="w-4 h-4 text-neutral" />
                   Kelas
                 </label>
                 <input
@@ -417,14 +413,14 @@ export default function PeminjamanContent({
                   placeholder="Contoh: IV A"
                   value={formData.kelas}
                   onChange={(e) => setFormData({ ...formData, kelas: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
                   required
                 />
               </div>
 
               {/* Tanggal Jatuh Tempo */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <div className="space-y-2 mb-6">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5 text-neutral" />
                   Tanggal Jatuh Tempo (Kembali)
                 </label>
@@ -432,7 +428,7 @@ export default function PeminjamanContent({
                   type="date"
                   value={formData.tanggal_jatuh_tempo}
                   onChange={(e) => setFormData({ ...formData, tanggal_jatuh_tempo: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
                   required
                 />
               </div>
@@ -442,14 +438,14 @@ export default function PeminjamanContent({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold font-headline rounded-xl text-sm transition-all cursor-pointer"
+                  className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold font-headline rounded-xl text-base transition-all cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isPending || availableBooks.length === 0}
-                  className="px-5 py-2.5 bg-primary hover:bg-blue-700 disabled:bg-slate-200 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-sm cursor-pointer"
+                  className="px-5 py-2.5 bg-primary hover:bg-blue-700 disabled:bg-slate-200 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-base cursor-pointer"
                 >
                   {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                   <span>Pinjamkan</span>

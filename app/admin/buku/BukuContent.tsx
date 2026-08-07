@@ -18,6 +18,7 @@ type Buku = {
   jumlah_eksemplar: number
   jumlah_tersedia: number
   kategori: Kategori | null
+  keterangan: string | null
 }
 
 export default function BukuContent({
@@ -44,6 +45,7 @@ export default function BukuContent({
     tahun: null,
     kategori_id: '',
     jumlah_eksemplar: 1,
+    keterangan: '',
   })
 
   // Open modal for Create
@@ -56,6 +58,7 @@ export default function BukuContent({
       tahun: new Date().getFullYear(),
       kategori_id: categories[0]?.id || '',
       jumlah_eksemplar: 1,
+      keterangan: '',
     })
     setIsOpen(true)
   }
@@ -70,6 +73,7 @@ export default function BukuContent({
       tahun: buku.tahun,
       kategori_id: buku.kategori_id || '',
       jumlah_eksemplar: buku.jumlah_eksemplar,
+      keterangan: buku.keterangan
     })
     setIsOpen(true)
   }
@@ -114,7 +118,8 @@ export default function BukuContent({
   const filteredBuku = bukuList.filter((buku) => {
     const matchesSearch =
       buku.judul.toLowerCase().includes(search.toLowerCase()) ||
-      (buku.pengarang && buku.pengarang.toLowerCase().includes(search.toLowerCase()))
+      (buku.pengarang && buku.pengarang.toLowerCase().includes(search.toLowerCase())) // || 
+      // (buku.keterangan && buku.keterangan.toLowerCase().includes(search.toLowerCase()))
     const matchesCategory =
       selectedCategory === 'all' || buku.kategori_id === selectedCategory
     return matchesSearch && matchesCategory
@@ -126,7 +131,6 @@ export default function BukuContent({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold font-headline text-slate-900">Daftar Koleksi Buku</h1>
-          <p className="text-sm text-neutral mt-1">Kelola dan pantau seluruh koleksi buku yang tersedia di perpustakaan.</p>
         </div>
         <button
           onClick={handleOpenCreate}
@@ -158,16 +162,28 @@ export default function BukuContent({
             placeholder="Cari judul buku atau pengarang..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-900 text-sm"
+            className="w-full pl-11 pr-4 py-2.5 bg-slate-200 border border-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-900 text-base"
           />
         </div>
 
         <div className="flex w-full md:w-auto items-center gap-2">
-          <Filter className="w-5 h-5 text-neutral shrink-0" />
+          <Filter className="w-7 h-5 text-neutral shrink-0" />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full md:w-48 px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-700 text-sm font-headline font-semibold cursor-pointer"
+            className="w-full md:w-64 px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-700 text-base font-headline font-semibold cursor-pointer"
+          >
+            <option value="all">Semua Kategori</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.nama}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full md:w-64 px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-700 text-base font-headline font-semibold cursor-pointer"
           >
             <option value="all">Semua Kategori</option>
             {categories.map((cat) => (
@@ -188,35 +204,36 @@ export default function BukuContent({
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse table-fixed min-w-[800px]">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-xs font-bold font-headline uppercase tracking-wider text-slate-500">
-                  <th className="p-4 pl-6">Detail Buku</th>
-                  <th className="p-4">Kategori</th>
-                  <th className="p-4 text-center">Tahun</th>
-                  <th className="p-4 text-center">Eksemplar</th>
-                  <th className="p-4 text-center">Tersedia</th>
-                  <th className="p-4 text-center">Status</th>
-                  <th className="p-4 pr-6 text-right">Aksi</th>
+                <tr className="bg-slate-50 border-b border-slate-100 text-sm font-bold font-headline uppercase tracking-wider text-slate-500">
+                  <th className="p-4 pl-6 w-[20%] text-center">Detail Buku</th>
+                  <th className="p-4 w-[18%] text-center">Keterangan</th>
+                  <th className="p-4 w-[12%] text-center">Kategori</th>
+                  <th className="p-4 w-[9%] text-center">Tahun</th>
+                  <th className="p-4 w-[9%] text-center">Eksemplar</th>
+                  <th className="p-4 w-[9%] text-center">Tersedia</th>
+                  <th className="p-4 w-[9%] text-center">Status</th>
+                  <th className="p-4 w-[14%] pr-6 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {filteredBuku.map((buku) => {
                   const sedangDipinjam = buku.jumlah_eksemplar - buku.jumlah_tersedia
                   let statusBadge = (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-emerald-50 text-emerald-700">
                       Tersedia
                     </span>
                   )
                   if (buku.jumlah_tersedia === 0) {
                     statusBadge = (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-red-50 text-red-700">
                         Habis
                       </span>
                     )
                   } else if (sedangDipinjam > 0) {
                     statusBadge = (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-blue-50 text-blue-700">
                         Dipinjam sebagian
                       </span>
                     )
@@ -226,42 +243,45 @@ export default function BukuContent({
                     <tr key={buku.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="p-4 pl-6">
                         <div>
-                          <div className="font-bold text-slate-900 text-sm font-headline">{buku.judul}</div>
-                          <div className="text-xs text-neutral mt-0.5">{buku.pengarang || 'Pengarang Tidak Diketahui'}</div>
+                          <div className="font-bold text-slate-900 text-base font-headline">{buku.judul}</div>
+                          <div className="text-sm mt-0.5">{buku.pengarang || 'Anonim'}</div>
                         </div>
                       </td>
-                      <td className="p-4">
-                        <span className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">
+                      <td className="p-4 text-center text-slate-600 font-medium">
+                        <div className="text-slate-900 text-sm font-headline">{buku.keterangan}</div>
+                      </td>
+                      <td className="p-4 text-center">
+                        <span className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold">
                           {buku.kategori?.nama || 'Tanpa Kategori'}
                         </span>
                       </td>
-                      <td className="p-4 text-center text-slate-600 font-medium">
+                      <td className="p-4 text-center text-sm text-slate-600 font-medium">
                         {buku.tahun || '-'}
                       </td>
-                      <td className="p-4 text-center text-slate-900 font-semibold">
+                      <td className="p-4 text-center text-sm text-slate-900 font-semibold">
                         {buku.jumlah_eksemplar}
                       </td>
-                      <td className="p-4 text-center text-primary font-bold">
+                      <td className="p-4 text-center text-sm text-primary font-bold">
                         {buku.jumlah_tersedia}
                       </td>
                       <td className="p-4 text-center">
                         {statusBadge}
                       </td>
                       <td className="p-4 pr-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleOpenEdit(buku)}
                             className="p-2 bg-blue-50 text-primary hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
                             title="Edit Buku"
                           >
-                            <Pencil className="w-4 h-4" />
+                            <Pencil className="w-8 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(buku.id)}
                             className="p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
                             title="Hapus Buku"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-8 h-4" />
                           </button>
                         </div>
                       </td>
@@ -277,7 +297,7 @@ export default function BukuContent({
       {/* Slide-over or Modal Overlay */}
       {isOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="px-6 py-4 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
               <h2 className="text-lg font-bold font-headline text-slate-900">
@@ -301,7 +321,7 @@ export default function BukuContent({
 
               {/* Judul */}
               <div className="space-y-1">
-                <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                <label className="text-sm font-bold font-headline uppercase tracking-wider text-slate-700 block">
                   Judul Buku
                 </label>
                 <input
@@ -310,14 +330,14 @@ export default function BukuContent({
                   placeholder="Contoh: Laskar Pelangi"
                   value={formData.judul}
                   onChange={(e) => setFormData({ ...formData, judul: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-sm text-slate-900"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
                 />
               </div>
 
               {/* Pengarang & Tahun */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                  <label className="text-base font-bold font-headline uppercase tracking-wider text-slate-700 block">
                     Pengarang
                   </label>
                   <input
@@ -325,11 +345,11 @@ export default function BukuContent({
                     placeholder="Contoh: Andrea Hirata"
                     value={formData.pengarang || ''}
                     onChange={(e) => setFormData({ ...formData, pengarang: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-sm text-slate-900"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                  <label className="text-base font-bold font-headline uppercase tracking-wider text-slate-700 block">
                     Tahun Terbit
                   </label>
                   <input
@@ -339,7 +359,7 @@ export default function BukuContent({
                     onChange={(e) =>
                       setFormData({ ...formData, tahun: e.target.value ? parseInt(e.target.value) : null })
                     }
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-sm text-slate-900"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
                   />
                 </div>
               </div>
@@ -347,13 +367,13 @@ export default function BukuContent({
               {/* Kategori & Eksemplar */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                  <label className="text-base font-bold font-headline uppercase tracking-wider text-slate-700 block">
                     Kategori
                   </label>
                   <select
                     value={formData.kategori_id || ''}
                     onChange={(e) => setFormData({ ...formData, kategori_id: e.target.value || null })}
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-sm text-slate-700 font-headline font-semibold cursor-pointer"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-700 font-headline font-semibold cursor-pointer"
                   >
                     <option value="">Pilih Kategori</option>
                     {categories.map((cat) => (
@@ -364,7 +384,7 @@ export default function BukuContent({
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                  <label className="text-base font-bold font-headline uppercase tracking-wider text-slate-700 block">
                     Jumlah Eksemplar
                   </label>
                   <input
@@ -374,9 +394,23 @@ export default function BukuContent({
                     onChange={(e) =>
                       setFormData({ ...formData, jumlah_eksemplar: parseInt(e.target.value) || 0 })
                     }
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-sm text-slate-900"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
                   />
                 </div>
+              </div>
+
+              {/* Keterangan */}
+              <div className="space-y-1">
+                <label className="text-base font-bold font-headline uppercase tracking-wider text-slate-700 block">
+                  Keterangan
+                </label>
+                <textarea
+                  placeholder="Sumber dana, jumlah judul, kondisi, dll"
+                  value={formData.keterangan || ''}
+                  onChange={(e) => setFormData({ ...formData, keterangan: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
+                  rows="5"
+                />
               </div>
 
               {/* Actions */}
@@ -384,14 +418,14 @@ export default function BukuContent({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="px-5 py-2.5 border border-slate-200 hover:bg-slate-50 font-bold font-headline text-slate-700 rounded-xl transition-all text-sm cursor-pointer"
+                  className="px-5 py-2.5 border border-slate-200 hover:bg-slate-50 font-bold font-headline text-slate-700 rounded-xl transition-all text-base cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2.5 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-sm cursor-pointer"
+                  className="px-5 py-2.5 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-base cursor-pointer"
                 >
                   {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                   <span>{editingId ? 'Simpan Perubahan' : 'Tambah Buku'}</span>

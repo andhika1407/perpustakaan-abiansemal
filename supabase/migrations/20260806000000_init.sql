@@ -13,6 +13,7 @@ create table public.buku (
   kategori_id uuid references public.kategori(id) on delete restrict,
   jumlah_eksemplar integer not null default 0,
   jumlah_tersedia integer not null default 0,
+  keterangan text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );

@@ -19,8 +19,8 @@ export default function AdminLayout({
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-bold font-headline text-slate-900 leading-tight">Perpustakaan</h2>
-              <p className="text-xs text-neutral">SDN Abiansemal</p>
+              <h2 className="text-lg font-bold font-headline text-slate-900 leading-tight">Perpustakaan</h2>
+              <p className="text-sm text-neutral">SDN 4 Abiansemal</p>
             </div>
           </div>
 
@@ -28,23 +28,23 @@ export default function AdminLayout({
           <nav className="p-4 space-y-1">
             <Link
               href="/admin/buku"
-              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-sm"
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-base"
             >
-              <BookMarked className="w-5 h-5 text-neutral group-hover:text-primary transition-colors" />
+              <BookMarked className="w-6 h-6 text-neutral group-hover:text-primary transition-colors" />
               <span>Daftar Buku</span>
             </Link>
             <Link
               href="/admin/kategori"
-              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-sm"
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-base"
             >
-              <FolderHeart className="w-5 h-5 text-neutral group-hover:text-primary transition-colors" />
+              <FolderHeart className="w-6 h-6 text-neutral group-hover:text-primary transition-colors" />
               <span>Kategori Buku</span>
             </Link>
             <Link
               href="/admin/peminjaman"
-              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-sm"
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 hover:text-primary rounded-xl transition-all duration-200 group font-headline font-semibold text-base"
             >
-              <BookOpen className="w-5 h-5 text-neutral group-hover:text-primary transition-colors" />
+              <BookOpen className="w-6 h-6 text-neutral group-hover:text-primary transition-colors" />
               <span>Peminjaman</span>
             </Link>
           </nav>
@@ -55,9 +55,9 @@ export default function AdminLayout({
           <form action={logout}>
             <button
               type="submit"
-              className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-headline font-semibold text-sm cursor-pointer"
+              className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-headline font-semibold text-base cursor-pointer"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-6 h-6" />
               <span>Keluar</span>
             </button>
           </form>
@@ -65,7 +65,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+      <main className="flex-1 p-6 md:p-10 mx-auto w-full">
         {children}
       </main>
     </div>

@@ -397,8 +397,8 @@ export default function BukuContent({
                   value={formData.keterangan || ''}
                   onChange={(e) => setFormData({ ...formData, keterangan: e.target.value })}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-900"
-                  rows="5"
-                />
+                  rows={5}
+                ></textarea>
               </div>
 
               {/* Actions */}

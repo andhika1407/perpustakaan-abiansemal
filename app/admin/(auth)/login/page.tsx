@@ -17,7 +17,7 @@ export default function LoginPage() {
   }, [state, router])
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden font-body">
+    <div className="h-screen bg-slate-50 flex items-center justify-center relative overflow-hidden font-body">
       {/* Decorative gradient blur background elements */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
@@ -33,8 +33,8 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold font-headline tracking-tight text-slate-900">
             Admin Perpustakaan
           </h1>
-          <p className="text-sm text-neutral mt-1">
-            SD Negeri Abiansemal
+          <p className="text-base text-neutral mt-1">
+            SD Negeri 4 Abiansemal
           </p>
         </div>
 
@@ -47,37 +47,37 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+            <label className="text-sm font-bold font-headline uppercase tracking-wider text-slate-700 block">
               Email Address
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Mail className="w-5 h-5" />
+                <Mail className="w-6 h-6" />
               </span>
               <input
                 type="email"
                 name="email"
                 required
                 placeholder="admin@sekolah.sch.id"
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all placeholder:text-slate-400 text-sm text-slate-900 font-body"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all placeholder:text-slate-400 text-base text-slate-900 font-body"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold font-headline uppercase tracking-wider text-slate-700 block">
+            <label className="text-sm font-bold font-headline uppercase tracking-wider text-slate-700 block">
               Password
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock className="w-5 h-5" />
+                <Lock className="w-6 h-6" />
               </span>
               <input
                 type="password"
                 name="password"
                 required
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all placeholder:text-slate-400 text-sm text-slate-900 font-body"
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all placeholder:text-slate-400 text-base text-slate-900 font-body"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full py-3.5 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl transition-all shadow-md hover:shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 mt-2 text-sm cursor-pointer"
+            className="w-full py-3.5 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl transition-all shadow-md hover:shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 mt-2 text-base cursor-pointer"
           >
             {isPending ? (
               <>

@@ -180,18 +180,6 @@ export default function BukuContent({
               </option>
             ))}
           </select>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full md:w-64 px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-slate-700 text-base font-headline font-semibold cursor-pointer"
-          >
-            <option value="all">Semua Kategori</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nama}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 

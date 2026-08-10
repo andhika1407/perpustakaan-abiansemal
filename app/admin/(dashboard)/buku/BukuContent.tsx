@@ -192,17 +192,17 @@ export default function BukuContent({
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse table-fixed min-w-[800px]">
+            <table className="w-full text-left border-collapse lg:table-fixed min-w-[800px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100 text-sm font-bold font-headline uppercase tracking-wider text-slate-500">
-                  <th className="p-4 pl-6 w-[20%] text-center">Detail Buku</th>
-                  <th className="p-4 w-[18%] text-center">Keterangan</th>
-                  <th className="p-4 w-[12%] text-center">Kategori</th>
-                  <th className="p-4 w-[9%] text-center">Tahun</th>
-                  <th className="p-4 w-[9%] text-center">Eksemplar</th>
-                  <th className="p-4 w-[9%] text-center">Tersedia</th>
-                  <th className="p-4 w-[9%] text-center">Status</th>
-                  <th className="p-4 w-[14%] pr-6 text-center">Aksi</th>
+                  <th className="p-4 pl-6 lg:w-[20%] text-center">Detail Buku</th>
+                  <th className="p-4 lg:w-[18%] text-center">Keterangan</th>
+                  <th className="p-4 lg:w-[12%] text-center">Kategori</th>
+                  <th className="p-4 lg:w-[9%] text-center">Tahun</th>
+                  <th className="p-4 lg:w-[9%] text-center">Eksemplar</th>
+                  <th className="p-4 lg:w-[9%] text-center">Tersedia</th>
+                  <th className="p-4 lg:w-[9%] text-center">Status</th>
+                  <th className="p-4 lg:w-[14%] pr-6 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">

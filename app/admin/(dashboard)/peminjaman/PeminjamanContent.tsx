@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useTransition } from 'react'
-import { Plus, X, Search, Filter, BookOpen, Calendar, User, BookMarked, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
-import { createPeminjaman, kembalikanBuku, type PeminjamanData } from './actions'
+import { Plus, X, Search, BookOpen, Calendar, User, BookMarked, Clock, CheckCircle2, AlertCircle, Loader2, Trash2 } from 'lucide-react'
+import { createPeminjaman, kembalikanBuku, deletePeminjaman, type PeminjamanData } from './actions'
 
 type BukuInfo = {
   id: string
@@ -82,6 +82,20 @@ export default function PeminjamanContent({
         setError(res.error)
       } else {
         setIsOpen(false)
+        window.location.reload()
+      }
+    })
+  }
+
+  // Delete Peminjaman
+  const handleDelete = (id: string) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus data peminjaman ini? Tindakan ini tidak dapat dibatalkan.')) return
+    setError(null)
+    startTransition(async () => {
+      const res = await deletePeminjaman(id)
+      if (res.error) {
+        setError(res.error)
+      } else {
         window.location.reload()
       }
     })
@@ -239,16 +253,16 @@ export default function PeminjamanContent({
       {/* Table List */}
       <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full table-fixed min-w-[800px] border-collapse text-left text-sm text-slate-600">
+          <table className="w-full lg:table-fixed min-w-[800px] border-collapse text-left text-sm text-slate-600">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-800 font-headline font-bold text-sm text-center uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4 w-[20%]">Nama Siswa</th>
-                <th className="px-6 py-4 w-[15%]">Buku</th>
-                <th className="px-6 py-4 w-[15%]">Tanggal Pinjam</th>
-                <th className="px-6 py-4 w-[15%]">Tenggat Waktu</th>
-                <th className="px-6 py-4 w-[15%]">Tanggal Kembali</th>
-                <th className="px-6 py-4 w-[10%]">Status</th>
-                <th className="px-6 py-4 w-[10%]">Aksi</th>
+                <th className="px-6 py-4 lg:w-[20%]">Nama Siswa</th>
+                <th className="px-6 py-4 lg:w-[15%]">Buku</th>
+                <th className="px-6 py-4 lg:w-[15%]">Tanggal Pinjam</th>
+                <th className="px-6 py-4 lg:w-[15%]">Tenggat Waktu</th>
+                <th className="px-6 py-4 lg:w-[15%]">Tanggal Kembali</th>
+                <th className="px-6 py-4 lg:w-[10%]">Status</th>
+                <th className="px-6 py-4 lg:w-[10%]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 font-body">
@@ -269,7 +283,7 @@ export default function PeminjamanContent({
                       </td>
                       {/* Buku */}
                       <td className="px-6 py-4">
-                        <div className="text-base font-medium text-slate-900 max-w-xs truncate">
+                        <div className="text-base font-medium text-slate-900 max-w-xs">
                           {item.buku?.judul || 'Buku Terhapus'}
                         </div>
                       </td>
@@ -308,20 +322,30 @@ export default function PeminjamanContent({
                       </td>
                       {/* Aksi */}
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        {(item.status === 'dipinjam' || item.status === 'telat') && (
+                        <div className="flex flex-col items-center justify-end gap-4">
+                          {(item.status === 'dipinjam' || item.status === 'telat') && (
+                            <button
+                              onClick={() => handleReturn(item.id)}
+                              disabled={isPending}
+                              className="px-3.5 py-1.5 bg-secondary hover:bg-green-600 disabled:bg-slate-200 text-white text-sm font-bold font-headline rounded-lg shadow-sm transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                            >
+                              {isPending ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                              )}
+                              <span>Kembalikan</span>
+                            </button>
+                          )}
                           <button
-                            onClick={() => handleReturn(item.id)}
+                            onClick={() => handleDelete(item.id)}
                             disabled={isPending}
-                            className="px-3.5 py-1.5 bg-secondary hover:bg-green-600 disabled:bg-slate-200 text-white text-sm font-bold font-headline rounded-lg shadow-sm transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                            className="px-3 py-1.5 bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-600 text-sm font-bold font-headline rounded-lg border border-red-200 transition-all inline-flex items-center gap-1.5 cursor-pointer"
                           >
-                            {isPending ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                            )}
-                            <span>Kembalikan</span>
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Hapus</span>
                           </button>
-                        )}
+                        </div>
                       </td>
                     </tr>
                   )
@@ -379,7 +403,7 @@ export default function PeminjamanContent({
                     <option value="" disabled>-- Pilih Buku Yang Tersedia --</option>
                     {availableBooks.map((buku) => (
                       <option key={buku.id} value={buku.id}>
-                        {buku.judul} {buku.pengarang ? `(oleh ${buku.pengarang})` : ''} — Stok: {buku.jumlah_tersedia}
+                        {buku.judul} — Stok: {buku.jumlah_tersedia}
                       </option>
                     ))}
                   </select>

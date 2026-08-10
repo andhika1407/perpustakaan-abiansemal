@@ -63,7 +63,7 @@ export async function deleteKategori(id: string) {
 
   if (error) {
     if (error.code === '23503') {
-      return { error: 'Kategori tidak dapat dihapus karena sedang digunakan oleh buku.' }
+      return { error: 'Kategori tidak dapat dihapus karena ada buku dengan kategori ini.' }
     }
     return { error: error.message }
   }

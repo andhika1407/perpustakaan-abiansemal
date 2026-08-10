@@ -157,3 +157,21 @@ export async function kembalikanBuku(id: string) {
   revalidatePath('/')
   return { success: true }
 }
+
+export async function deletePeminjaman(id: string) {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('peminjaman')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/admin/peminjaman')
+  revalidatePath('/admin/buku')
+  revalidatePath('/')
+  return { success: true }
+}

@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from 'react'
 import { Plus, X, Search, BookOpen, Calendar, User, BookMarked, Clock, CheckCircle2, AlertCircle, Loader2, Trash2 } from 'lucide-react'
+import Select from 'react-select';
 import { createPeminjaman, kembalikanBuku, deletePeminjaman, type PeminjamanData } from './actions'
 
 type BukuInfo = {
@@ -143,6 +144,12 @@ export default function PeminjamanContent({
       year: 'numeric',
     })
   }
+
+  // Books option
+  const options = availableBooks.map((buku) => ({
+    value: buku.id,
+    label: `${buku.judul} — Stok: ${buku.jumlah_tersedia}`,
+  }));
 
   return (
     <div className="space-y-6">
@@ -394,19 +401,16 @@ export default function PeminjamanContent({
                     Tidak ada buku yang saat ini tersedia (stok kosong). Silakan tambah atau update buku di modul Daftar Buku.
                   </div>
                 ) : (
-                  <select
-                    value={formData.buku_id}
-                    onChange={(e) => setFormData({ ...formData, buku_id: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
-                    required
-                  >
-                    <option value="" disabled>-- Pilih Buku Yang Tersedia --</option>
-                    {availableBooks.map((buku) => (
-                      <option key={buku.id} value={buku.id}>
-                        {buku.judul} — Stok: {buku.jumlah_tersedia}
-                      </option>
-                    ))}
-                  </select>
+                  <Select
+                    options={options}
+                    value={options.find((o) => o.value === formData.buku_id) || null}
+                    onChange={(selected) => setFormData({ ...formData, buku_id: selected?.value || '' })}
+                    placeholder="-- Cari Buku --"
+                    isClearable
+                    classNames={{
+                      control: () => 'border border-slate-200 rounded-xl',
+                    }}
+                  />
                 )}
               </div>
 

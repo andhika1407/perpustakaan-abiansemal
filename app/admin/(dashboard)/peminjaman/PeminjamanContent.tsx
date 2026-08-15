@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useTransition } from 'react'
-import { Plus, X, Search, BookOpen, Calendar, User, BookMarked, Clock, CheckCircle2, AlertCircle, Loader2, Trash2 } from 'lucide-react'
+import React, { useState, useTransition, useMemo } from 'react'
+import { Plus, X, Search, BookOpen, Calendar, User, BookMarked, Clock, CheckCircle2, AlertCircle, Loader2, Trash2, FileDown } from 'lucide-react'
 import Select from 'react-select';
 import { createPeminjaman, kembalikanBuku, deletePeminjaman, type PeminjamanData } from './actions'
 
@@ -39,8 +39,11 @@ export default function PeminjamanContent({
   const [peminjamanList, setPeminjamanList] = useState<Peminjaman[]>(initialPeminjaman)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'dipinjam' | 'dikembalikan' | 'telat'>('all')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [isPDFLoading, setIsPDFLoading] = useState(false)
 
   // Modal State
   const [isOpen, setIsOpen] = useState(false)
@@ -116,6 +119,37 @@ export default function PeminjamanContent({
     })
   }
 
+  // Download PDF (lazy-load @react-pdf/renderer only on click)
+  const handleDownloadPDF = async () => {
+    if (isPDFLoading) return
+    setIsPDFLoading(true)
+    try {
+      const [{ pdf }, { default: PeminjamanPDFDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./PeminjamanPDFDocument'),
+      ])
+      const blob = await pdf(
+        <PeminjamanPDFDocument
+          data={filteredPeminjaman}
+          stats={pdfStats}
+          filterLabel={filterLabel}
+          searchQuery={search}
+          printDate={printDate}
+        />
+      ).toBlob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = pdfFileName
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('Gagal membuat PDF:', err)
+    } finally {
+      setIsPDFLoading(false)
+    }
+  }
+
   // Filter & Search Logic
   const filteredPeminjaman = peminjamanList.filter((item) => {
     const matchesSearch =
@@ -123,17 +157,25 @@ export default function PeminjamanContent({
       item.kelas.toLowerCase().includes(search.toLowerCase()) ||
       (item.buku && item.buku.judul.toLowerCase().includes(search.toLowerCase()))
 
-    const matchesStatus =
-      statusFilter === 'all' || item.status === statusFilter
+    // const matchesStatus =
+    //   statusFilter === 'all' || item.status === statusFilter
 
-    return matchesSearch && matchesStatus
+    const matchesDate = 
+      !startDate && !endDate ? true :
+      !startDate ? new Date(item.tanggal_pinjam) <= new Date(endDate) :
+      !endDate ? new Date(item.tanggal_pinjam) >= new Date(startDate) :
+      new Date(item.tanggal_pinjam) >= new Date(startDate) && 
+      new Date(item.tanggal_pinjam) <= new Date(endDate)
+
+    // return matchesSearch && matchesStatus
+    return matchesSearch && matchesDate
   })
 
   // Statistics
-  const totalPinjam = peminjamanList.length
-  const sedangDipinjam = peminjamanList.filter((i) => i.status === 'dipinjam').length
-  const terlambat = peminjamanList.filter((i) => i.status === 'telat').length
-  const selesai = peminjamanList.filter((i) => i.status === 'dikembalikan').length
+  const totalPinjam = filteredPeminjaman.length
+  const sedangDipinjam = filteredPeminjaman.filter((i) => i.status === 'dipinjam').length
+  const terlambat = filteredPeminjaman.filter((i) => i.status === 'telat').length
+  const selesai = filteredPeminjaman.filter((i) => i.status === 'dikembalikan').length
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-'
@@ -151,6 +193,44 @@ export default function PeminjamanContent({
     label: `${buku.judul} — Stok: ${buku.jumlah_tersedia}`,
   }));
 
+  // ── PDF helpers ──────────────────────────────────────────────────────────
+  const filterLabel = useMemo(() => {
+    switch (statusFilter) {
+      case 'all': return 'Semua'
+      case 'dipinjam': return 'Dipinjam'
+      case 'telat': return 'Terlambat'
+      case 'dikembalikan': return 'Dikembalikan'
+      default: return 'Semua'
+    }
+  }, [statusFilter])
+
+  const pdfStats = useMemo(() => ({
+    total: totalPinjam,
+    dipinjam: sedangDipinjam,
+    terlambat: terlambat,
+    selesai: selesai,
+  }), [totalPinjam, sedangDipinjam, terlambat, selesai])
+
+  const printDate = useMemo(() => {
+    const now = new Date()
+    const months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    ]
+    return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`
+  }, [])
+
+  const pdfFileName = useMemo(() => {
+    const now = new Date()
+    const y = now.getFullYear()
+    const m = String(now.getMonth() + 1).padStart(2, '0')
+    const d = String(now.getDate()).padStart(2, '0')
+    const hr = String(now.getHours()).padStart(2, '0')
+    const mnt = String(now.getMinutes()).padStart(2, '0')
+    const sec = String(now.getSeconds()).padStart(2, '0')
+    return `laporan-peminjaman-${y}${m}${d}-${hr}${mnt}${sec}.pdf`
+  }, [statusFilter])
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -158,13 +238,29 @@ export default function PeminjamanContent({
         <div>
           <h1 className="text-3xl font-extrabold font-headline text-slate-900">Modul Peminjaman Buku</h1>
         </div>
-        <button
-          onClick={handleOpenCreate}
-          className="px-5 py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-base self-start sm:self-auto cursor-pointer"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Pinjamkan Buku</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+          {/* Cetak PDF Button */}
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isPDFLoading}
+            className="px-5 py-3 bg-white hover:bg-slate-50 disabled:opacity-60 text-slate-700 font-bold font-headline rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-center gap-2 text-base cursor-pointer"
+          >
+            {isPDFLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+            ) : (
+              <FileDown className="w-5 h-5 text-slate-500" />
+            )}
+            <span>{isPDFLoading ? 'Menyiapkan...' : 'Cetak ke PDF'}</span>
+          </button>
+
+          <button
+            onClick={handleOpenCreate}
+            className="px-5 py-3 bg-primary hover:bg-blue-700 text-white font-bold font-headline rounded-xl shadow-md hover:shadow-primary/20 transition-all flex items-center gap-2 text-base cursor-pointer"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Pinjamkan Buku</span>
+          </button>
+        </div>
       </div>
 
       {/* Global Error message */}
@@ -235,7 +331,7 @@ export default function PeminjamanContent({
         </div>
 
         {/* Status Filters */}
-        <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100/80 rounded-xl self-start md:self-auto">
+        {/* <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100/80 rounded-xl self-start md:self-auto">
           {[
             { value: 'all', label: 'Semua' },
             { value: 'dipinjam', label: 'Dipinjam' },
@@ -254,7 +350,36 @@ export default function PeminjamanContent({
               {tab.label}
             </button>
           ))}
+        </div> */}
+
+        {/* Date Filters */}
+        <div className="inline-flex gap-4">
+          <div>
+            <label className="bg-white text-sm text-slate-500">
+              Tanggal Mulai
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+              placeholder='Tanggal Mulai'
+            />
+          </div>
+          <div>
+            <label className="bg-white text-sm text-slate-500">
+              Tanggal Akhir
+            </label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+              placeholder='Tanggal Akhir'
+            />
+          </div>
         </div>
+
       </div>
 
       {/* Table List */}

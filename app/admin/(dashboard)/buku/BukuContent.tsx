@@ -363,7 +363,7 @@ export default function BukuContent({
                     onChange={(e) => setFormData({ ...formData, kategori_id: e.target.value || null })}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl outline-none transition-all text-base text-slate-700 font-headline font-semibold cursor-pointer"
                   >
-                    <option value="">Pilih Kategori</option>
+                    <option value=''>Pilih Kategori</option>
                     {categories.map((cat) => (
                       <option key={cat.id} value={cat.id}>
                         {cat.nama}

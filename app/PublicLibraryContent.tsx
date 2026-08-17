@@ -108,25 +108,14 @@ export default function PublicLibraryContent({
               <p className="text-xxs sm:text-xs text-neutral">SDN Abiansemal</p>
             </div>
           </div>
-
-          <Link
-            href="/admin/buku"
-            className="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold font-headline rounded-xl text-sm transition-all shadow-sm cursor-pointer"
-          >
-            <LogIn className="w-4 h-4 text-slate-500" />
-            <span>Masuk Admin</span>
-          </Link>
         </div>
       </header>
 
       {/* Hero Banner Section */}
       <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto text-center sm:text-left sm:px-6 lg:px-8">
-          <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            Selamat Datang
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-headline mt-3">Katalog Buku SDN Abiansemal</h2>
-          <p className="text-blue-100 mt-2 text-sm sm:text-base max-w-2xl">
+          <h2 className="text-3xl sm:text-4xl font-extrabold font-headline mt-3">Katalog Buku SD 4 Abiansemal</h2>
+          <p className="text-blue-100 mt-2 text-base max-w-2xl">
             Cari dan periksa ketersediaan buku favoritmu sebelum meminjam di perpustakaan sekolah.
           </p>
         </div>
@@ -145,30 +134,25 @@ export default function PublicLibraryContent({
             {/* Filter Kategori */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Kategori</label>
-              <div className="flex flex-col gap-1.5">
-                <button
-                  onClick={() => updateParams({ category: 'all' })}
-                  className={`text-left px-3 py-2 rounded-lg text-sm transition-all cursor-pointer font-medium ${
-                    filters.category === 'all'
-                      ? 'bg-blue-50 text-primary font-bold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
+              <div className="relative mt-2">
+                <select
+                  value={filters.category}
+                  onChange={(e) => updateParams({ category: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none cursor-pointer"
                 >
-                  Semua Kategori
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => updateParams({ category: cat.id })}
-                    className={`text-left px-3 py-2 rounded-lg text-sm transition-all cursor-pointer font-medium truncate ${
-                      filters.category === cat.id
-                        ? 'bg-blue-50 text-primary font-bold'
-                        : 'text-slate-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    {cat.nama}
-                  </button>
-                ))}
+                  <option value="all">Semua Kategori</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.nama}
+                    </option>
+                  ))}
+                </select>
+                {/* Icon dropdown */}
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
 
@@ -273,7 +257,7 @@ export default function PublicLibraryContent({
                       </div>
 
                       <div className="z-10 mt-auto">
-                        <h4 className="font-bold font-headline text-sm line-clamp-2 drop-shadow-sm group-hover:underline">
+                        <h4 className="font-bold font-headline text-base line-clamp-2 drop-shadow-sm group-hover:underline">
                           {buku.judul}
                         </h4>
                       </div>
